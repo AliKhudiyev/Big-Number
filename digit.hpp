@@ -1,4 +1,14 @@
 
+/*
+ * Digit.hpp header file.
+ * Generic/Template Digit class to contains the whole digits of any type of number
+ * Excluding the imaginary numbers, any decimal digits can be hold
+ * This header file contains many of operations which user shouldn't be able to use on his own
+ * The limit of digit storage is the number of bytes of the free storage in the user's ram
+ * Not too much efficient to hold and work with many and very very big numbers
+ * Recommended to hold ~150 digits at once in order to not lose efficiency too much
+*/
+
 #include<string>
 #include<iostream>
 
@@ -16,13 +26,26 @@ class Digit{
     Digit* prev_;
     bool SEEK__;
 
+    Digit(unsigned long nb_digit, char digit, bool reverse): 
+        digit_(digit), next_(nullptr), prev_(nullptr) {
+            auto it=this;
+            for(unsigned long nb=1;nb<nb_digit;++nb){
+                it->next_=new (std::nothrow) Digit<Char_T>(it);
+                it=it->next_;
+                it->digit_=digit;
+            }
+        }
+
     void parse_number(const std::string& number, const char delim);     //susp: memory leak
     void parse_number(const char* number, const char delim);
     void parse_number(double number);
-    void trim();    //susp: memory leak
+    void init_number(unsigned long nb_digit, unsigned char init_val);
+    void trim();    //+ no memory leak
     void trim(unsigned beg_, unsigned end_);    //susp: memory leak
     Char_T add_carry(Char_T digit) const;
     Char_T mult_carry(Char_T digit, Char_T carry) const;
+    void read(std::ostream& out) const;
+    void write(std::istream& in);
 
     protected:
     /*
@@ -53,26 +76,34 @@ class Digit{
     bool is_convertible_to_ldouble();
 
     public:
-    Digit():
-        Digit(.0) {}
+    Digit(): 
+        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) {}
+    Digit(int number): 
+        Digit(number+0.0) {}
     explicit Digit(const std::string& number, const char delim='.'):
         next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
     {
         parse_number(number, delim);
     }
-    // explicit Digit(const char* number, const char delim='.'):
-    //     next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
-    // {
-    //     parse_number(number, delim);
-    // }
+    explicit Digit(const char* number, const char delim='.'):
+        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
+    {
+        parse_number(number, delim);
+    }
     explicit Digit(double number):
         next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
     {
         parse_number(number);
     }
-    Digit(Digit<Char_T>* prev):
-        Digit() { prev_=prev; }
-    explicit Digit(unsigned long nb_digit, Char_T init_val=0);
+    explicit Digit(Digit<Char_T>* prev):
+        next_(nullptr), prev_(prev), SEEK__(SEEK_BEG) {}
+    explicit Digit(unsigned long nb_digit, unsigned long init_val): 
+        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
+    {
+        init_number(nb_digit, init_val);
+    }
+
+    std::string to_string() const;
 
     void debug_print(){
         std::cout<<"===Debug Print of Digit===\n";
@@ -85,29 +116,28 @@ class Digit{
     /*
     * Overloaded operators
     */
-    friend std::ostream& operator<<(std::ostream& out, const Digit<char>& D);   //+
-    friend std::istream& operator>>(std::istream& in, Digit<char>& D);          //+
+    friend std::ostream& operator<<(std::ostream& out, const Digit<char>& Dgt);   //+
+    friend std::istream& operator>>(std::istream& in, Digit<char>& Dgt);          //+
     unsigned operator[](int position) const;  //+
-    void operator=(const Digit& D);     //susp: memory leak
-    void operator+=(const Digit& D);    //-
-    void operator-=(const Digit& D);    //-
-    void operator*=(const Digit& D);    //-
-    void operator/=(const Digit& D);    //-
-    void operator^=(const Digit& D);    //-
-    void operator%=(const Digit& D);    //-
-    Digit& operator+(const Digit& D) const;   //+
-    Digit& operator-(const Digit& D) const;   //-
-    Digit& operator*(const Digit& D) const;   //needs to be checked
-    Digit& operator/(const Digit& D) const;   //-
-    Digit& operator^(const Digit& D) const;   //-
-    Digit& fctl();                      //+
-    Digit& operator%(const Digit& D) const;   //-
-    bool operator<=(const Digit& D) const;    //+
-    bool operator<(const Digit& D) const;     //+
-    bool operator>=(const Digit& D) const;    //+
-    bool operator!=(const Digit& D) const;    //+
-    bool operator>(const Digit& D) const;     //+
-    bool operator==(const Digit& D) const;    //+
+    void operator=(const Digit& Dgt);     //susp: memory leak
+    void operator+=(const Digit& Dgt);    //+ no memory leak
+    void operator-=(const Digit& Dgt);    //+ no memory leak
+    void operator*=(const Digit& Dgt);    //+ no memory leak
+    void operator/=(const Digit& Dgt);    //-
+    void operator^=(const Digit& Dgt);    //-
+    void operator%=(const Digit& Dgt);    //+ no memory leak
+    const Digit operator+(const Digit& Dgt) const;       //+ no memory leak
+    Digit operator-(const Digit& Dgt) const;   //+ no memory leak
+    Digit operator*(const Digit& Dgt) const;   //+ no memory leak
+    Digit operator/(const Digit& Dgt) const;   //-
+    Digit operator^(const Digit& Dgt) const;   //-
+    Digit operator%(const Digit& Dgt) const;   //+ no memory leak
+    bool operator<=(const Digit& Dgt) const;    //+ no memory leak
+    bool operator<(const Digit& Dgt) const;     //+ no memory leak
+    bool operator>=(const Digit& Dgt) const;    //+ no memory leak
+    bool operator!=(const Digit& Dgt) const;    //+ no memory leak
+    bool operator>(const Digit& Dgt) const;     //+ no memory leak
+    bool operator==(const Digit& Dgt) const;    //+ no memory leak
 
     ~Digit();
 };
