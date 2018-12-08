@@ -3,11 +3,18 @@
 #include"number.hpp"
 #include<stdio.h>
 
-#define _NUMERIC10_
+#define _NUMERIC_STRING_
+#define MAX_DIGIT_LIMIT 500
+#define USUAL_DIGIT_LIMIT 100
+#define MIN_DIGIT_LIMIT 1
 // #define _INCLUDED_NUMBER_LIBRARY_
 
 #include"numerical.hpp"
 // #include"amath.hpp"
+
+const Digit<> PI_(_PI_.substr(0,3000));
+const Digit<> E_(_E_.substr(0,3000));
+const Digit<> PHI_(_PHI_.substr(0,3000));
 
 using namespace std;
 
@@ -26,16 +33,22 @@ int main(){
     // dig->set(7);
     // cout<<cdig->get()<<'\n';
 
-    Digit<> dig1, dig2;
+    Digit<> dig1(2), dig2(3), dig3;
     cout<<"Enter a number : ";
     cin>>dig1;
     cout<<"First number : "<<dig1<<"\n";
     cout<<"Enter a number : ";
     cin>>dig2;
     cout<<"Second number : "<<dig2<<"\n";
+    // cout<<"Enter a number : ";
+    // cin>>dig3;
+    // cout<<"Third number : "<<dig3<<"\n";
 
-    // Digit<> dig3=dig1+(_PHI_+(_PI_*dig2)-_E_);
-    // cout<<dig3<<'\n';
+    // Digit<> dig4=dig1+dig2;//dig1*(dig2+dig3);
+    for(unsigned i=0;i<1;++i){
+        dig1+=dig2;
+        cout<<dig1<<'\n';
+    }
 
     // int opt;
     // cout<<"Enter an operator option: ";
