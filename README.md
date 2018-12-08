@@ -4,6 +4,9 @@ The number type which can hold and operate(work with) bigger double values whose
 Using it is very easy and simply. All you need to do is download the library to your computer, then use these libraries in your programs with ```#include"number.hpp"``` for example.
 
 ```c++
+#include<iostream>
+#include"number.hpp"
+
 int main(){
 
   Digit<char> a;
