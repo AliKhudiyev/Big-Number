@@ -1,7 +1,7 @@
 # Big-Number
 The number type which can hold and operate(work with) bigger double values whose digits are more than milions or even billions.
 
-Using it is very easy and simply. All you need to do is download the library to your computer, then use these libraries in your programs with ```c++ #include"number.hpp" ``` for example.
+Using it is very easy and simply. All you need to do is download the library to your computer, then use these libraries in your programs with ```#include"number.hpp"``` for example.
 
 ```c++
 int main(){
