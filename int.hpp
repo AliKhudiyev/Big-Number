@@ -8,7 +8,7 @@
 #include"number.hpp"
 
 template<class Char_T>
-class Int: public Digit<Char_T>{
+class Int: public Number<Char_T>{
     private:
     ;
 
