@@ -86,6 +86,8 @@ std::istream& operator>>(std::istream& in, Number<char>& Num){
     return in;
 }
 
+    // INCOMPLETED OPERATORS WHICH MAY POSSIBLE OPERATE WRONGLY !
+
 template<class Char_T>
 Char_T Number<Char_T>::operator[](int position) const{
     ;
@@ -93,8 +95,23 @@ Char_T Number<Char_T>::operator[](int position) const{
 
 template<class Char_T>
 void Number<Char_T>::operator+=(const Number& Num){
-    *digit_+=*Num.digit_;
-    *idigit_+=*Num.idigit_;
+    if(sign_==Num.sign_ && isign_==Num.isign_){
+        *digit_+=*Num.digit_;
+        *idigit_+=*Num.idigit_;
+    } else if(sign_!=Num.sign_ && isign_!=Num.isign_){
+        *digit_-=*Num.digit_;
+        *idigit_-=*Num.idigit_;
+        sign_=*this>=Num? sign_ : -1*sign_ ;
+        isign_=*this>=Num? isign_ : -1*isign_ ;
+    } else if(sign_!=Num.sign_){
+        *digit_-=*Num.digit_;
+        *idigit_+=*Num.idigit_;
+        sign_=*this>=Num? sign_ : -1*sign_ ;
+    } else{
+        *digit_+=*Num.digit_;
+        *idigit_-=*Num.idigit_;
+        isign_=*this>=Num? isign_ : -1*isign_ ;
+    }
 }
 
 template<class Char_T>
@@ -130,22 +147,48 @@ void Number<Char_T>::operator%=(const Number& Num){
 
 template<class Char_T>
 void Number<Char_T>::operator=(const Number& Num){
-    ;
+    
+    delete idigit_;
+    delete digit_;
+
+    idigit_=new (std::nothrow) Digit<Char_T>;
+
+    *idigit_=*Num.idigit_;
+    isize_=Num.isize_;
+    isign_=Num.isign_;
+
+    digit_=new (std::nothrow) Digit<Char_T>;
+
+    *digit_=*Num.digit_;
+    delim_=Num.delim_;
+    size_=Num.size_;
+    SEEK__=Num.SEEK__;
+    type_=Num.type_;
+    sign_=Num.sign_;
 }
 
 template<class Char_T>
 Number<Char_T> Number<Char_T>::operator+(const Number& Num) const{
-    ;
+    Number<Char_T> result;
+    result=*this;
+    result+=Num;
+    return result;
 }
 
 template<class Char_T>
 Number<Char_T> Number<Char_T>::operator-(const Number& Num) const{
-    ;
+    Number<Char_T> result;
+    result=*this;
+    result-=Num;
+    return result;
 }
 
 template<class Char_T>
 Number<Char_T> Number<Char_T>::operator*(const Number& Num) const{
-    ;
+    Number<Char_T> result;
+    result=*this;
+    result*=Num;
+    return result;
 }
 
 template<class Char_T>
@@ -175,30 +218,41 @@ Number<Char_T> Number<Char_T>::operator%(const Number& Num) const{
 
 template<class Char_T>
 bool Number<Char_T>::operator==(const Number& Num) const{
-    ;
+    if(*digit_==*Num.digit_ && *idigit_==*Num.idigit_ &&
+        sign_==Num.sign_ && isign_==Num.isign_) return true;
+    return false;
 }
 
 template<class Char_T>
 bool Number<Char_T>::operator>=(const Number& Num) const{
-    ;
+    if(((*digit_)*(*digit_)+(*idigit_)*(*idigit_))>=
+        ((*Num.digit_)*(*Num.digit_)+(*Num.idigit_)*(*Num.idigit_))) return true;
+    return false;
 }
 
 template<class Char_T>
 bool Number<Char_T>::operator>(const Number& Num) const{
-    ;
+    if(((*digit_)*(*digit_)+(*idigit_)*(*idigit_))>
+        ((*Num.digit_)*(*Num.digit_)+(*Num.idigit_)*(*Num.idigit_))) return true;
+    return false;
 }
 
 template<class Char_T>
 bool Number<Char_T>::operator<=(const Number& Num) const{
-    ;
+    if(((*digit_)*(*digit_)+(*idigit_)*(*idigit_))<=
+        ((*Num.digit_)*(*Num.digit_)+(*Num.idigit_)*(*Num.idigit_))) return true;
+    return false;
 }
 
 template<class Char_T>
 bool Number<Char_T>::operator<(const Number& Num) const{
-    ;
+    if(((*digit_)*(*digit_)+(*idigit_)*(*idigit_))<
+        ((*Num.digit_)*(*Num.digit_)+(*Num.idigit_)*(*Num.idigit_))) return true;
+    return false;
 }
 
 template<class Char_T>
 bool Number<Char_T>::operator!=(const Number& Num) const{
-    ;
+    if(!(*this==Num)) return true;
+    return false;
 }
