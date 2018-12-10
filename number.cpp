@@ -99,18 +99,18 @@ void Number<Char_T>::operator+=(const Number& Num){
         *digit_+=*Num.digit_;
         *idigit_+=*Num.idigit_;
     } else if(sign_!=Num.sign_ && isign_!=Num.isign_){
+        if((*digit_<*Num.digit_)) sign_*=-1;
+        if(*idigit_<*Num.idigit_) isign_*=-1;
         *digit_-=*Num.digit_;
         *idigit_-=*Num.idigit_;
-        sign_=*this>=Num? sign_ : -1*sign_ ;
-        isign_=*this>=Num? isign_ : -1*isign_ ;
     } else if(sign_!=Num.sign_){
+        if(*digit_<*Num.digit_) sign_*=-1;
         *digit_-=*Num.digit_;
         *idigit_+=*Num.idigit_;
-        sign_=*this>=Num? sign_ : -1*sign_ ;
     } else{
+        if(*idigit_<*Num.idigit_) isign_*=-1;
         *digit_+=*Num.digit_;
         *idigit_-=*Num.idigit_;
-        isign_=*this>=Num? isign_ : -1*isign_ ;
     }
 }
 
