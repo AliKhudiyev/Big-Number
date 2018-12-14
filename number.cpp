@@ -11,7 +11,7 @@ void Number<Char_T>::init(const std::string& number, const std::string& inumber,
     delete digit_;
     
     std::string inum=inumber, num=number;
-        
+    
     if(inumber[0]=='+' || inumber[0]=='-') inum=inumber.substr(1, inumber.size()-1);
     idigit_=new Digit<Char_T>(inum, delim);
     isign_=inumber[0]=='-'? -1 : 1 ;
@@ -116,17 +116,58 @@ void Number<Char_T>::operator+=(const Number& Num){
 
 template<class Char_T>
 void Number<Char_T>::operator-=(const Number& Num){
-    *digit_-=*Num.digit_;
-    *idigit_-=*Num.idigit_;
+    if(sign_!=Num.sign_){
+        *digit_+=*Num.digit_;
+    } else{
+        if(*digit_<*Num.digit_) sign_*=-1;
+        *digit_-=*Num.digit_;
+    }
+
+    if(isign_!=Num.isign_){
+        *idigit_+=*Num.idigit_;
+    } else{
+        if(*idigit_<*Num.idigit_) isign_*=-1;
+        *idigit_-=*Num.idigit_;
+    }
 }
 
 template<class Char_T>
 void Number<Char_T>::operator*=(const Number& Num){
-    Digit<Char_T> tmp;
+    Digit<Char_T> tmp_digit, final_digit;
+    Digit<Char_T> tmp_idigit;
+    short tmp_sign, tmp_isign;
 
-    tmp=(*digit_)*(*Num.digit_)-(*idigit_)*(*Num.idigit_);
-    *idigit_=(*digit_)*(*Num.idigit_)+(*idigit_)*(*Num.digit_);
-    *digit_=tmp;
+    if(sign_!=Num.sign_) tmp_sign=-1;
+    else tmp_sign=1;
+    if(isign_!=Num.isign_) tmp_isign=-1;
+    else tmp_isign=1;
+    
+    tmp_digit=*digit_*(*Num.digit_);
+    tmp_idigit=*idigit_*(*Num.idigit_);
+    if(tmp_sign!=tmp_isign){
+        final_digit=tmp_digit+tmp_idigit;
+    } else{
+        if(tmp_digit<tmp_idigit) tmp_sign*=-1;
+        final_digit=tmp_digit-tmp_idigit;
+    }
+
+    // imaginary part
+
+    if(sign_!=Num.isign_) sign_=-1;
+    else sign_=1;
+    if(isign_!=Num.sign_) isign_=-1;
+    else isign_=1;
+    
+    tmp_digit=*digit_*(*Num.idigit_);
+    tmp_idigit=*idigit_*(*Num.digit_);    
+    if(sign_!=isign_){
+        if(tmp_digit<tmp_idigit) isign_=-sign_;
+        *idigit_=tmp_digit-tmp_idigit;
+    } else{
+        *idigit_=tmp_digit+tmp_idigit;
+    }
+    sign_=tmp_sign;
+    *digit_=final_digit;
 }
 
 template<class Char_T>
