@@ -174,11 +174,6 @@ void Digit<Char_T>::Set(const std::string& number, const char delim){
 }
 
 template<class Char_T>
-void Digit<Char_T>::seek(bool SEEK_){
-    SEEK__=SEEK_;
-}
-
-template<class Char_T>
 unsigned Digit<Char_T>::get() const{
     return digit_;
 }
@@ -224,8 +219,9 @@ std::istream& operator>>(std::istream& in, Digit<char>& Dgt){
 
 template<class Char_T>
 unsigned Digit<Char_T>::operator[](int position) const{
-    unsigned digit;
+    unsigned digit=0;
     int pos=0;
+    /*
     if(SEEK__){
         if(position<0){
             throw Exception("Negative position from SEEK_BEG!");
@@ -253,6 +249,7 @@ unsigned Digit<Char_T>::operator[](int position) const{
             throw Exception("Out of boundary postions from SEEK_ORG!");
         } else digit=it->digit_;
     }
+    */
     return digit;
 }
 

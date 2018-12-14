@@ -14,9 +14,8 @@
 
 #pragma once
 
-#define Num_T Char_T
-#define SEEK_BEG true
-#define SEEK_ORG false
+template<class Char_T>
+class Number;
 
 template<class Char_T=char>
 class Digit{
@@ -24,17 +23,50 @@ class Digit{
     mutable Char_T digit_;
     Digit* next_;
     Digit* prev_;
-    bool SEEK__;
+    
+    /*
+    * Constructures are private in order to prevent the user
+    * to construct an instance of Digit class directly
+    * However, having such an instance is constructuble
+    * through the frind class which is Number
+    */
 
-    Digit(unsigned long nb_digit, char digit, bool reverse): 
-        digit_(digit), next_(nullptr), prev_(nullptr) {
-            auto it=this;
-            for(unsigned long nb=1;nb<nb_digit;++nb){
-                it->next_=new (std::nothrow) Digit<Char_T>(it);
-                it=it->next_;
-                it->digit_=digit;
-            }
+    Digit(): 
+        next_(nullptr), prev_(nullptr) {}
+    Digit(int number): 
+        Digit(number+0.0) {}
+    explicit Digit(const std::string& number, const char delim='.'):
+        next_(nullptr), prev_(nullptr) 
+    {
+        parse_number(number, delim);
+    }
+    explicit Digit(const char* number, const char delim='.'):
+        next_(nullptr), prev_(nullptr) 
+    {
+        parse_number(number, delim);
+    }
+    explicit Digit(double number):
+        next_(nullptr), prev_(nullptr) 
+    {
+        parse_number(number);
+    }
+    explicit Digit(Digit<Char_T>* prev):
+        next_(nullptr), prev_(prev) {}
+    explicit Digit(unsigned long nb_digit, unsigned long init_val): 
+        next_(nullptr), prev_(nullptr) 
+    {
+        init_number(nb_digit, init_val);
+    }
+    explicit Digit(unsigned long nb_digit, char digit, bool reverse): 
+        digit_(digit), next_(nullptr), prev_(nullptr) 
+    {
+        auto it=this;
+        for(unsigned long nb=1;nb<nb_digit;++nb){
+            it->next_=new (std::nothrow) Digit<Char_T>(it);
+            it=it->next_;
+            it->digit_=digit;
         }
+    }
 
     void parse_number(const std::string& number, const char delim);     //susp: memory leak
     void parse_number(const char* number, const char delim);
@@ -58,7 +90,6 @@ class Digit{
     void insert(Char_T digit);
     void set(Char_T digit);
     void Set(const std::string& number, const char delim='.');
-    void seek(bool SEEK_);
     unsigned get() const;
     Char_T get_c() const;
     Digit* get_next() const;
@@ -76,42 +107,9 @@ class Digit{
     bool is_convertible_to_ldouble();
 
     public:
-    Digit(): 
-        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) {}
-    Digit(int number): 
-        Digit(number+0.0) {}
-    explicit Digit(const std::string& number, const char delim='.'):
-        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
-    {
-        parse_number(number, delim);
-    }
-    explicit Digit(const char* number, const char delim='.'):
-        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
-    {
-        parse_number(number, delim);
-    }
-    explicit Digit(double number):
-        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
-    {
-        parse_number(number);
-    }
-    explicit Digit(Digit<Char_T>* prev):
-        next_(nullptr), prev_(prev), SEEK__(SEEK_BEG) {}
-    explicit Digit(unsigned long nb_digit, unsigned long init_val): 
-        next_(nullptr), prev_(nullptr), SEEK__(SEEK_BEG) 
-    {
-        init_number(nb_digit, init_val);
-    }
+    friend class Number<Char_T>;
 
     std::string to_string() const;
-
-    void debug_print(){
-        std::cout<<"===Debug Print of Digit===\n";
-        for(auto it=this;it;it=it->next_){
-            std::cout<<static_cast<char>(it->digit_+'0');
-        }
-        std::cout<<'\n';
-    }
 
     /*
     * Overloaded operators
