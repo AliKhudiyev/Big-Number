@@ -9,11 +9,11 @@ Using it is very easy and simply. All you need to do is download the library to 
 
 int main(){
 
-  Digit<char> a;
-  Digit<> b("5.32");  //<> indicates char
-
-  std::cin>>a;
-  std::cout<<a*b<<std::endl;
+  Number<char> a(4, 8), b("-4", "53.25");
+  Number<> sum;   // same with Number<char> sum;
+  
+  cin>>sum;
+  cout<<((a+b==sum)? "Yes" : "No")<<'\n';   // Comparing abs values
 
   return 0;
 }
