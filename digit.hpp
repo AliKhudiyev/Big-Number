@@ -45,11 +45,11 @@ class Digit{
     {
         parse_number(number, delim);
     }
-    // explicit Digit(double number):
-    //     next_(nullptr), prev_(nullptr) 
-    // {
-    //     parse_number(number);
-    // }
+    explicit Digit(double number):
+        next_(nullptr), prev_(nullptr) 
+    {
+        parse_number(number);
+    }
     explicit Digit(Digit<Char_T>* prev):
         next_(nullptr), prev_(prev) {}
     explicit Digit(unsigned long nb_digit, unsigned long init_val): 
@@ -76,8 +76,8 @@ class Digit{
     void trim(unsigned beg_, unsigned end_);    //susp: memory leak
     Char_T add_carry(Char_T digit) const;
     Char_T mult_carry(Char_T digit, Char_T carry) const;
-    void read(std::ostream& out) const;
-    void write(std::istream& in);
+    // std::ostream& read(std::ostream& out, long prec=-1) const;
+    // std::istream& write(std::istream& in);
 
     protected:
     /*
@@ -109,12 +109,6 @@ class Digit{
     public:
     friend class Number<Char_T>;
 
-    explicit Digit(double number):
-        next_(nullptr), prev_(nullptr) 
-    {
-        parse_number(number);
-    }
-
     std::string to_string() const;
 
     /*
@@ -142,6 +136,9 @@ class Digit{
     bool operator!=(const Digit& Dgt) const;    //+ no memory leak
     bool operator>(const Digit& Dgt) const;     //+ no memory leak
     bool operator==(const Digit& Dgt) const;    //+ no memory leak
+
+    std::ostream& read(std::ostream& out, long prec=-1) const;
+    std::istream& write(std::istream& in);
 
     ~Digit();
 };

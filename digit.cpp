@@ -122,17 +122,29 @@ Char_T Digit<Char_T>::mult_carry(Char_T digit, Char_T carry) const{
 }
 
 template<class Char_T>
-void Digit<Char_T>::read(std::ostream& out) const{
+std::ostream& Digit<Char_T>::read(std::ostream& out, long prec) const{
+    bool pass=false;
     for(auto it=this;it;it=it->next_){
+        if(prec>=0 && (pass || it->digit_+48=='.')){
+            if(!pass){
+                if(prec==1) prec+=2;
+                else prec+=1;
+            }
+            pass=true;
+            --prec;
+        }
+        if(pass && prec==0) break;
         out<<static_cast<char>(it->digit_+'0');
     }
+    return out;
 }
 
 template<class Char_T>
-void Digit<Char_T>::write(std::istream& in){
+std::istream& Digit<Char_T>::write(std::istream& in){
     std::string number;
     in>>number;
     Set(number);
+    return in;
 }
 
 /*
@@ -208,13 +220,11 @@ std::string Digit<Char_T>::to_string() const{
 */
 
 std::ostream& operator<<(std::ostream& out, const Digit<char>& Dgt){
-    Dgt.read(out);
-    return out;
+    return Dgt.read(out);
 }
 
 std::istream& operator>>(std::istream& in, Digit<char>& Dgt){
-    Dgt.write(in);
-    return in;
+    return Dgt.write(in);
 }
 
 template<class Char_T>
@@ -324,20 +334,35 @@ template<class Char_T>void Digit<Char_T>::operator*=(const Digit& Dgt){
         temp->append(0);
         ++t0;
         // std::cout<<"added temporary : "<<temporary<<'\n';
-        result=result+temporary;
+        result+=temporary;
         // std::cout<<"current RESULT : "<<result<<'\n';
     }
     // std::cout<<"comma counter : "<<comma_cnt1+comma_cnt2<<'\n';
     if(result.digit_!=0){
+        Digit<Char_T>* final_result=nullptr;
+        unsigned ccomma_cnt=0;
         auto cres=&result;
+        auto finalR=cres;
         res=cres;
+        for(res;res->digit_!='.'-48;res=res->next_, ++ccomma_cnt);
+        if(ccomma_cnt<=comma_cnt1+comma_cnt2){
+            final_result=new Digit<Char_T>;
+            *final_result=result;
+            for(auto cnt=comma_cnt1+comma_cnt2;cnt>ccomma_cnt;--cnt){
+                final_result->add_front(0);
+            }
+            cres=final_result;
+        }
         for(cres;cres->digit_!='.'-48;cres=cres->next_);
         for(unsigned comma_cnt=0;comma_cnt<comma_cnt1+comma_cnt2;++comma_cnt){
             cres->digit_=cres->prev_->digit_;
             cres=cres->prev_;
         }   cres->digit_='.'-48;
+        for(cres;cres->prev_;cres=cres->prev_);
+        result=*cres;
+        delete final_result;
     }
-    
+    result.trim();
     *this=result;
 }
 
@@ -453,7 +478,7 @@ template<class Char_T>Digit<Char_T> Digit<Char_T>::operator-(const Digit& Dgt) c
         } else if(!res->prev_ || carry==0) break;
     }
     // Trimming useless 0's from the front and the back of the final number
-    result.trim();
+    // result.trim();
 
     return result;
 }

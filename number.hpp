@@ -22,6 +22,7 @@ class Number{
     bool SEEK__;
     std::string type_;
     char sign_;
+    long prec_=-1;
 
     void init(const std::string& number, const std::string& inumber="0", const char delim='.');
     void init(const char* number, const char* inumber="0", const char delim='.');
@@ -60,6 +61,7 @@ class Number{
     */
 
     void seek(bool SEEK);
+    virtual void set_precision(unsigned long dec=1);
 
     /*
     * Getters

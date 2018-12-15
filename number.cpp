@@ -48,6 +48,11 @@ void Number<Char_T>::init(double number, double inumber){
 }
 
 template<class Char_T>
+void Number<Char_T>::set_precision(unsigned long prec){
+    prec_=prec;
+}
+
+template<class Char_T>
 size_t Number<Char_T>::isize() const{
     return isize_;
 }
@@ -170,7 +175,11 @@ std::ostream& operator<<(std::ostream& out, const Number<char>& Num){
     char sgn='-', isgn='-';
     if(Num.sign_==1) sgn='+';
     if(Num.isign_==1) isgn='+';
-    out<<sgn<<*Num.digit_<<isgn<<*Num.idigit_<<"*"<<Num.imaginary_number_;
+    Num.digit_->read(out, Num.prec_);
+    out<<"+";
+    Num.idigit_->read(out, Num.prec_);
+    out<<"*"<<Num.imaginary_number_;
+    // out<<sgn<<*Num.digit_<<isgn<<*Num.idigit_<<"*"<<Num.imaginary_number_;
     return out;
 }
 
