@@ -19,8 +19,8 @@ Each individual class has its own specifaction(s).
 - isize : To get digit-character length for its imaginary part
 - seek : To get if SEEK is in the beginning position or not
 - delimeter : To get its delimeter(i.e. '.' for number -5.70)
-- `+` , - , * , / , += , -= , ++ , -- , > , == and many more overloaded arithmetic functions
-- << and >> stream operators
+- `+` , `-` , `*` , `/` , `+=` , `-=` , `++` , `--` , `>` , `==` and many more overloaded arithmetic functions
+- `<<` and `>>` stream operators
 
 
 Using it is very easy and simply. All you need to do is download the library to your computer, then use these libraries in your programs with ```#include"number.hpp"``` for example.
