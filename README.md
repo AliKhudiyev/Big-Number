@@ -1,5 +1,5 @@
 # Big-Number
-The number type which can hold and operate(work with) bigger double values whose digits are more than milions or even billions.
+The number type which can hold and operate(work with) bigger numbers whose digits are more than thousands or even millions.
 
 ## Number hieararchy and its specifications.
 There are 3 main classes you can use:
