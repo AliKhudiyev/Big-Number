@@ -328,14 +328,16 @@ template<class Char_T>void Digit<Char_T>::operator*=(const Digit& Dgt){
         // std::cout<<"current RESULT : "<<result<<'\n';
     }
     // std::cout<<"comma counter : "<<comma_cnt1+comma_cnt2<<'\n';
-    auto cres=&result;
-    res=cres;
-    for(cres;cres->digit_!='.'-48;cres=cres->next_);
-    for(unsigned comma_cnt=0;comma_cnt<comma_cnt1+comma_cnt2;++comma_cnt){
-        cres->digit_=cres->prev_->digit_;
-        cres=cres->prev_;
-    }   cres->digit_='.'-48;
-
+    if(result.digit_!=0){
+        auto cres=&result;
+        res=cres;
+        for(cres;cres->digit_!='.'-48;cres=cres->next_);
+        for(unsigned comma_cnt=0;comma_cnt<comma_cnt1+comma_cnt2;++comma_cnt){
+            cres->digit_=cres->prev_->digit_;
+            cres=cres->prev_;
+        }   cres->digit_='.'-48;
+    }
+    
     *this=result;
 }
 

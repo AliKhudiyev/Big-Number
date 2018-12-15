@@ -45,11 +45,11 @@ class Digit{
     {
         parse_number(number, delim);
     }
-    explicit Digit(double number):
-        next_(nullptr), prev_(nullptr) 
-    {
-        parse_number(number);
-    }
+    // explicit Digit(double number):
+    //     next_(nullptr), prev_(nullptr) 
+    // {
+    //     parse_number(number);
+    // }
     explicit Digit(Digit<Char_T>* prev):
         next_(nullptr), prev_(prev) {}
     explicit Digit(unsigned long nb_digit, unsigned long init_val): 
@@ -108,6 +108,12 @@ class Digit{
 
     public:
     friend class Number<Char_T>;
+
+    explicit Digit(double number):
+        next_(nullptr), prev_(nullptr) 
+    {
+        parse_number(number);
+    }
 
     std::string to_string() const;
 
