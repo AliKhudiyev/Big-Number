@@ -246,7 +246,7 @@ Number<Char_T>& Number<Char_T>::operator*=(const Number& Num){
     Digit<Char_T> tmp_digit, final_digit;
     Digit<Char_T> tmp_idigit;
     short tmp_sign, tmp_isign;
-
+    
     if(sign_!=Num.sign_) tmp_sign=-1;
     else tmp_sign=1;
     if(isign_!=Num.isign_) tmp_isign=-1;
@@ -261,6 +261,7 @@ Number<Char_T>& Number<Char_T>::operator*=(const Number& Num){
         final_digit=tmp_digit-tmp_idigit;
     }
 
+    std::cout<<"img part begins\n";
     // imaginary part
 
     if(sign_!=Num.isign_) sign_=-1;
@@ -377,7 +378,7 @@ Number<Char_T>& Number<Char_T>::operator--(){
 
 template<class Char_T>
 bool Number<Char_T>::operator==(const Number& Num) const{
-    if(*digit_*(*digit_)+*idigit_*(*idigit_)==*Num.digit_*(*Num.digit_)+*Num.idigit_*(*Num.idigit_)) return true;
+    if((*digit_)*(*digit_)+(*idigit_)*(*idigit_)==(*Num.digit_)*(*Num.digit_)+(*Num.idigit_)*(*Num.idigit_)) return true;
     return false;
 }
 

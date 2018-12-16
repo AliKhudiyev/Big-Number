@@ -339,28 +339,34 @@ template<class Char_T>void Digit<Char_T>::operator*=(const Digit& Dgt){
     }
     // std::cout<<"comma counter : "<<comma_cnt1+comma_cnt2<<'\n';
     if(result.digit_!=0){
-        Digit<Char_T>* final_result=nullptr;
-        unsigned ccomma_cnt=0;
+        Digit<Char_T>* pdigit=nullptr;
+        unsigned counter=0, total=comma_cnt1+comma_cnt2;
         auto cres=&result;
-        auto finalR=cres;
         res=cres;
-        for(res;res->digit_!='.'-48;res=res->next_, ++ccomma_cnt);
-        if(ccomma_cnt<=comma_cnt1+comma_cnt2){
-            final_result=new Digit<Char_T>;
-            *final_result=result;
-            for(auto cnt=comma_cnt1+comma_cnt2;cnt>ccomma_cnt;--cnt){
-                final_result->add_front(0);
-            }
-            cres=final_result;
+        for(res;res->digit_!='.'-48;res=res->next_, ++counter);
+        if(counter<=comma_cnt1+comma_cnt2){
+            // std::cout<<"if accepted!\n";
+            pdigit=new Digit<Char_T>;
+            *pdigit=result;
+            for(unsigned cnt=counter;cnt<=total;++cnt) pdigit->add_front(0);
+            for(;pdigit->prev_;pdigit=pdigit->prev_);
+            cres=pdigit;
+        
+            for(cres;cres->digit_!='.'-48;cres=cres->next_);
+            for(unsigned comma_cnt=0;comma_cnt<comma_cnt1+comma_cnt2;++comma_cnt){
+                cres->digit_=cres->prev_->digit_;
+                cres=cres->prev_;
+            }   cres->digit_='.'-48;
+        } else{
+            for(cres;cres->digit_!='.'-48;cres=cres->next_);
+            for(unsigned cnt=0;cnt<total;++cnt){
+                cres->digit_=cres->prev_->digit_;
+                cres=cres->prev_;
+            }   cres->digit_='.'-48;
         }
-        for(cres;cres->digit_!='.'-48;cres=cres->next_);
-        for(unsigned comma_cnt=0;comma_cnt<comma_cnt1+comma_cnt2;++comma_cnt){
-            cres->digit_=cres->prev_->digit_;
-            cres=cres->prev_;
-        }   cres->digit_='.'-48;
         for(cres;cres->prev_;cres=cres->prev_);
         result=*cres;
-        delete final_result;
+        delete pdigit;
     }
     result.trim();
     *this=result;
